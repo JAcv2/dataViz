@@ -1,0 +1,89 @@
+Traceback (most recent call last):
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\nbclient\client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\jupyter_core\utils\__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\asyncio\base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\nbclient\client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\nbclient\client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\juacevedo.ATLANTICQI\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\nbclient\client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import psycopg2
+import csv
+
+# Parámetros de conexión
+host = "localhost"
+port = "5342"
+dbname = "myname_db"
+user = "myname_user"
+password = "password"
+
+# Establecer conexión
+conn = psycopg2.connect(
+    host=host,
+    port=port,
+    dbname=dbname,
+    user=user,
+    password=password
+)
+
+# Crear un cursor
+cur = conn.cursor()
+
+# Abrir el archivo CSV
+with open('C:\\Users\\Edward Morales\\Documents\\GitHub\\Tarea_1_Visualizacion\\Carnado.csv', 'r') as f: #Aqui tienes que poner el link de tu archivo
+    reader = csv.reader(f)
+    next(reader)  # Saltar la cabecera
+    for row in reader:
+        # Convertir 'null' a None
+        row = [None if x == 'null' else x for x in row]
+        cur.execute(
+            "INSERT INTO cardano_prices (date, open, high, low, close, adj_close, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            row
+        )
+
+# Confirmar los cambios
+conn.commit()
+
+# Cerrar el cursor y la conexión
+cur.close()
+conn.close()
+
+------------------
+
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mOperationalError[0m                          Traceback (most recent call last)
+Cell [1;32mIn[1], line 12[0m
+[0;32m      9[0m password [38;5;241m=[39m [38;5;124m"[39m[38;5;124mpassword[39m[38;5;124m"[39m
+[0;32m     11[0m [38;5;66;03m# Establecer conexión[39;00m
+[1;32m---> 12[0m conn [38;5;241m=[39m [43mpsycopg2[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m
+[0;32m     13[0m [43m    [49m[43mhost[49m[38;5;241;43m=[39;49m[43mhost[49m[43m,[49m
+[0;32m     14[0m [43m    [49m[43mport[49m[38;5;241;43m=[39;49m[43mport[49m[43m,[49m
+[0;32m     15[0m [43m    [49m[43mdbname[49m[38;5;241;43m=[39;49m[43mdbname[49m[43m,[49m
+[0;32m     16[0m [43m    [49m[43muser[49m[38;5;241;43m=[39;49m[43muser[49m[43m,[49m
+[0;32m     17[0m [43m    [49m[43mpassword[49m[38;5;241;43m=[39;49m[43mpassword[49m
+[0;32m     18[0m [43m)[49m
+[0;32m     20[0m [38;5;66;03m# Crear un cursor[39;00m
+[0;32m     21[0m cur [38;5;241m=[39m conn[38;5;241m.[39mcursor()
+
+File [1;32m~\AppData\Local\miniconda3\envs\ml_venv\lib\site-packages\psycopg2\__init__.py:122[0m, in [0;36mconnect[1;34m(dsn, connection_factory, cursor_factory, **kwargs)[0m
+[0;32m    119[0m     kwasync[[38;5;124m'[39m[38;5;124masync_[39m[38;5;124m'[39m] [38;5;241m=[39m kwargs[38;5;241m.[39mpop([38;5;124m'[39m[38;5;124masync_[39m[38;5;124m'[39m)
+[0;32m    121[0m dsn [38;5;241m=[39m _ext[38;5;241m.[39mmake_dsn(dsn, [38;5;241m*[39m[38;5;241m*[39mkwargs)
+[1;32m--> 122[0m conn [38;5;241m=[39m _connect(dsn, connection_factory[38;5;241m=[39mconnection_factory, [38;5;241m*[39m[38;5;241m*[39mkwasync)
+[0;32m    123[0m [38;5;28;01mif[39;00m cursor_factory [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m    124[0m     conn[38;5;241m.[39mcursor_factory [38;5;241m=[39m cursor_factory
+
+[1;31mOperationalError[0m: connection to server at "localhost" (::1), port 5342 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5342 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+
